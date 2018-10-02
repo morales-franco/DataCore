@@ -13,15 +13,20 @@ namespace DataCore.Core.Persistence
         {
         }
 
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
-        {
-            modelBuilder.Query<EquipoIndexDto>();
-        }
-
         public DbSet<Equipo> Equipo { get; set; }
         public DbSet<Division> Division { get; set; }
         public DbSet<Pais> Pais { get; set; }
 
+        #region Views
+        public DbQuery<EquipoViewIndex> EquipoViewIndex { get; set; }
+        #endregion
 
+        #region Configuration
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder
+                .Query<EquipoViewIndex>().ToView("EquipoViewIndex");
+        }
+        #endregion
     }
 }

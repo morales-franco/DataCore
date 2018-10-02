@@ -4,7 +4,7 @@ using System.Text;
 
 namespace DataCore.Core.Dto.Index
 {
-    public class EquipoIndexDto
+    public class EquipoViewIndex
     {
         public long EquipoId { get; set; }
         public string Nombre { get; set; }

@@ -1,5 +1,6 @@
 ﻿using DataCore.Core.Dto.Index;
 using DataCore.Core.Entities;
+using DataCore.Core.Extensions;
 using DataCore.Core.IRepositories;
 using DataCore.Core.Persistence;
 using Microsoft.EntityFrameworkCore;
@@ -31,8 +32,14 @@ namespace DataCore.Core.Repositories
                                  .FromSql("Select * from Equipo where PaisId = 1")
                                  .ToList();
 
-            var param = new SqlParameter("@Nombre", "Riv");
-            var equipo2 = context.Equipo.FromSql("EquipoIndex @Nombre", param).ToList();
+            //View way
+            var equipoIndexViews = context.EquipoViewIndex.Where(e => e.Pais.StartsWith("Arg")).ToList();
+
+            //Reader way
+            List<EquipoViewIndex> indexList = new List<EquipoViewIndex>();
+            var cmd = context.LoadStoredProc("EquipoIndex").WithSqlParam("Nombre", "R").ExecuteStoredProc<EquipoViewIndex>();
+            
+            //context wat
             return context.Equipo.ToList();
         }
     }
