@@ -3,3 +3,7 @@
 ################################################################################
 
 /DataCore.App/DataCore.App/bin/Debug/netcoreapp2.1
+/DataCore.App/DataCore.App/obj
+/DataCore.App/DataCore.Core/obj
+/DataCore.App/DataCore.Core/bin/Debug/netstandard2.0
+/DataCore.App/.vs
