@@ -1,11 +1,14 @@
-﻿using DataCore.Core.Dto.Index;
+﻿using Dapper;
+using DataCore.Core.Dto.Index;
 using DataCore.Core.Entities;
 using DataCore.Core.Extensions;
 using DataCore.Core.IRepositories;
 using DataCore.Core.Persistence;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
@@ -35,11 +38,19 @@ namespace DataCore.Core.Repositories
             //View way
             var equipoIndexViews = context.EquipoViewIndex.Where(e => e.Pais.StartsWith("Arg")).ToList();
 
-            //Reader way
+            //Reader ADO way
             List<EquipoViewIndex> indexList = new List<EquipoViewIndex>();
             var cmd = context.LoadStoredProc("EquipoIndex").WithSqlParam("Nombre", "R").ExecuteStoredProc<EquipoViewIndex>();
-            
-            //context wat
+
+            //Dapper Way
+            var adoConnection = context.Database.GetDbConnection().ConnectionString;
+            var sqlConnection = new SqlConnection(adoConnection);
+            DynamicParameters parameters = new DynamicParameters();
+            parameters.Add("@Nombre", "R");
+
+            var equipos = SqlMapper.Query<EquipoViewIndex>(sqlConnection, "EquipoIndex", parameters, null, true, null, CommandType.StoredProcedure).ToList();
+
+            //context way
             return context.Equipo.ToList();
         }
     }
